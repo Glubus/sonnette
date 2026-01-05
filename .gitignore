@@ -1,0 +1,8 @@
+target/
+**/*.rs.bk
+.gemini/
+.idea/
+.vscode/
+*.swp
+*.iml
+*.DS_Store

@@ -1,0 +1,29 @@
+[package]
+name = "client"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+common = { path = "../../libs/common" }
+tokio = { version = "1.0", features = ["full"] }
+tokio-tungstenite = "0.20"
+futures-util = "0.3"
+rodio = "0.17"
+rand = "0.8"
+url = "2.4"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+anyhow = "1.0"
+# For system tray - using basic crates for now, keeping it simple
+# tray-icon requirements might be heavy on Linux (libgtk-3-dev). 
+# I will infer the user wants a GUI-less background app mostly, but with an icon.
+# If this fails to compile, I'll fallback to CLI only.
+# tray-icon = "0.14"
+winit = "0.29"
+log = "0.4"
+env_logger = "0.10"
+rdev = "0.5"
+uuid = { version = "1.0", features = ["v4"] }
+sha2 = "0.10"
+hex = "0.4"
+base64 = "0.22"

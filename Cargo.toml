@@ -1,0 +1,10 @@
+[workspace]
+resolver = "2"
+members = ["libs/common", "apps/server", "apps/client"]
+
+[profile.release]
+opt-level = 3     # Maximize speed
+lto = "fat"       # Enable Fat LTO for cross-crate optimization
+codegen-units = 1 # Maximize optimization opportunities (slower compile)
+panic = "abort"   # Remove unwind tables (helps perf slightly, smaller binary)
+strip = false     # Keep symbols (size doesn't matter)
