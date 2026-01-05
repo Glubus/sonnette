@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libasound2-dev libudev-dev pkg-config libxdo-dev
+          sudo apt-get install -y libasound2-dev libudev-dev pkg-config libxdo-dev libxi-dev
 
       - name: Build
         run: cargo build -p client --release
