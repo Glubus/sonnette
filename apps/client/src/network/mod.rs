@@ -21,10 +21,11 @@ use handlers::handle_incoming_message;
 type WsSender = SplitSink<WebSocketStream<MaybeTlsStream<TcpStream>>, Message>;
 type WsReceiver = SplitStream<WebSocketStream<MaybeTlsStream<TcpStream>>>;
 
-const SERVER_URL: &str = "ws://51.254.128.175:3000/ws";
+// const SERVER_URL: &str = "ws://51.254.128.175:3000/ws";
 
 pub async fn run_ws_client(my_uuid: Uuid, mut rx_input: mpsc::Receiver<WsMessage>) {
-    let url = Url::parse(SERVER_URL).expect("Invalid URL");
+    let server_url = std::env::var("SERVER_URL").expect("SERVER_URL must be set");
+    let url = Url::parse(&server_url).expect("Invalid URL");
 
     loop {
         println!("Connecting to {}...", url);

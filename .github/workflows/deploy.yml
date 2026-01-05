@@ -1,0 +1,68 @@
+name: Deploy Client
+
+on:
+  push:
+    tags:
+      - "v*"
+    branches:
+      - master
+
+permissions:
+  contents: write
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libasound2-dev libudev-dev pkg-config libxdo-dev
+
+      - name: Build
+        run: cargo build -p client --release
+
+      - name: Rename binary
+        run: mv target/release/client ./sonnerie-linux
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sonnerie-linux
+          path: ./sonnerie-linux
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build
+        run: cargo build -p client --release
+
+      - name: Rename binary
+        run: mv target/release/client.exe ./sonnerie-windows.exe
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sonnerie-windows
+          path: ./sonnerie-windows.exe
+
+  release:
+    needs: [build-linux, build-windows]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: sonnerie-*
+          merge-multiple: true
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            sonnerie-linux
+            sonnerie-windows.exe

@@ -10,6 +10,7 @@ use tokio::sync::mpsc;
 use uuid::Uuid;
 
 fn main() {
+    dotenv::dotenv().ok();
     env_logger::init();
 
     println!("Starting Sonnerie Client (Background Mode)");

@@ -6,3 +6,4 @@ target/
 *.swp
 *.iml
 *.DS_Store
+.env
