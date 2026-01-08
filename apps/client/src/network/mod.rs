@@ -67,8 +67,22 @@ async fn run_interaction_loop(
     mut read: WsReceiver,
     rx_input: &mut mpsc::Receiver<WsMessage>,
 ) {
+    let mut ping_interval = tokio::time::interval(Duration::from_secs(30));
+    // Set the first tick to happen after the duration, not immediately
+    ping_interval.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Skip);
+    ping_interval.tick().await; // First tick is immediate, so we consume it or configure it.
+                                // Actually, standard interval ticks immediately. Let's just tick it once before loop.
+
     loop {
         tokio::select! {
+            _ = ping_interval.tick() => {
+                // Send Ping
+                println!("Sending Ping...");
+                if let Err(e) = write.send(Message::Ping(vec![])).await {
+                    eprintln!("Failed to send Ping: {}", e);
+                    break;
+                }
+            }
             some_msg = read.next() => {
                 if !handle_incoming_message(some_msg, my_uuid) {
                     break;

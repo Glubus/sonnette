@@ -50,8 +50,9 @@ fn handle_ring_bell(parsed: &WsMessage, my_uuid: Uuid) {
                 println!("Server requested hash: {}", hash);
                 if let Err(e) = play_sound_by_hash(&hash) {
                     eprintln!("Failed to play by hash: {}", e);
+                } else {
+                    played_specific = true;
                 }
-                played_specific = true;
             }
         }
 
@@ -61,6 +62,14 @@ fn handle_ring_bell(parsed: &WsMessage, my_uuid: Uuid) {
                 eprintln!("Failed to play sound: {}", e);
             }
         }
+
+        // Show Notification
+        use notify_rust::Notification;
+        let _ = Notification::new()
+            .summary("Sonnerie")
+            .body("🔔 Ding Dong ! On vous appelle !")
+            .appname("Sonnerie")
+            .show();
     }
 }
 
